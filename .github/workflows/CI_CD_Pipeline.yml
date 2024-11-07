@@ -8,26 +8,37 @@ on:
 
 jobs:
   build-and-test:
-    runs-on: windows-latest
+    runs-on: windows-latest  # Usar un runner de Windows
 
     steps:
       - name: Check out the repository code
         uses: actions/checkout@v2
         
+      - name: Setup .NET Framework
+        run: |
+          # Instalar el SDK de .NET Framework si es necesario
+          # Esto puede no ser necesario si ya está preinstalado en el runner
+          # Aquí puedes agregar comandos para instalar cualquier herramienta necesaria
+
       - name: Restore dependencies
-        run: nuget restore creacion_de_empleados.sln
+        run: |
+          cd creacion_de_empleados
+          nuget restore creacion_de_empleados.sln  # Asegúrate de que NuGet esté disponible
 
       - name: Build the project
-        run: msbuild creacion_de_empleados.sln /p:Configuration=Release
+        run: |
+          cd creacion_de_empleados
+          msbuild creacion_de_empleados.sln /p:Configuration=Release
 
       - name: Run tests
         run: |
-          dotnet test TestFundionalidades/TestFundionalidades.csproj --configuration Release --logger "trx;LogFileName=test-results.trx"
-        
+          cd creacion_de_empleados
+          dotnet test --no-build --verbosity normal --logger "trx;LogFileName=test-results.trx"
+
       - name: Publish test results
         if: always()
         uses: actions/upload-artifact@v3
         with:
           name: test-results
-          path: 'TestFundionalidades/TestResults/test-results.trx'
+          path: 'creacion_de_empleados/TestResults/test-results.trx'
 
