@@ -8,32 +8,20 @@ on:
 
 jobs:
   build:
-    runs-on: windows-latest
+    runs-on: [windows-latest]
 
     steps:
       - name: Checkout code
         uses: actions/checkout@v2
+        
+      - name: setup-msbuild
+        uses: microsoft/setup-msbuild@v2
 
-      - name: Install Visual Studio 2022
-        run: |
-          Invoke-WebRequest -Uri https://aka.ms/vs/16/release/vs_community.exe -OutFile vs_community.exe
-          Start-Process -FilePath .\vs_community.exe -ArgumentList '--layout C:\vs2019 --lang en-US --add Microsoft.VisualStudio.Workload.ManagedDesktop --add Microsoft.Component.MSBuild' -Wait
-
+      - name: Setup NuGet.exe
+        uses: NuGet/setup-nuget@v2.0.0
+         
       - name: Restore dependencies
         run: nuget restore creacion_de_empleados.sln
 
       - name: Build project
-        run: |
-          & 'C:\vs2019\MSBuild\Current\Bin\MSBuild.exe' creacion_de_empleados.sln /p:Configuration=Release
-
-      - name: Run tests
-        run: |
-          cd TestFundionalidades
-          dotnet test TestFundionalidades.csproj --no-build --verbosity normal --logger "trx;LogFileName=test-results.trx"
-
-      - name: Publish test results
-        if: always()
-        uses: actions/upload-artifact@v3
-        with:
-          name: test-results
-          path: 'TestFundionalidades/test-results.trx'
+        run: msbuild creacion_de_empleados.sln
