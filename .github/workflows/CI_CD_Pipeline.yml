@@ -8,25 +8,26 @@ on:
 
 jobs:
   build-and-test:
-    runs-on: windows-latest 
+    runs-on: windows-latest
 
     steps:
       - name: Check out the repository code
         uses: actions/checkout@v2
         
       - name: Restore dependencies
-        run: nuget restore creacion_de_empleados/creacion_de_empleados.sln
+        run: nuget restore creacion_de_empleados.sln
 
       - name: Build the project
-        run: msbuild creacion_de_empleados/creacion_de_empleados.sln /p:Configuration=Release
+        run: msbuild creacion_de_empleados.sln /p:Configuration=Release
 
       - name: Run tests
         run: |
-          dotnet test creacion_de_empleados/creacion_de_empleados.Tests/creacion_de_empleados.Tests.csproj --configuration Release --logger "trx;LogFileName=test-results.trx"
+          dotnet test TestFundionalidades/TestFundionalidades.csproj --configuration Release --logger "trx;LogFileName=test-results.trx"
         
       - name: Publish test results
         if: always()
         uses: actions/upload-artifact@v3
         with:
           name: test-results
-          path: 'creacion_de_empleados/TestResults/test-results.trx'
+          path: 'TestFundionalidades/TestResults/test-results.trx'
+
