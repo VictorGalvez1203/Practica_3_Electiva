@@ -8,7 +8,7 @@ on:
 
 jobs:
   build-and-test:
-    runs-on: windows-latest
+    runs-on: windows-2022
 
     steps:
       - name: Check out the repository code
@@ -17,9 +17,9 @@ jobs:
       - name: Restore dependencies
         run: nuget restore creacion_de_empleados.sln
 
-      - name: Build the project
+      - name: Build project
         run: |
-          & 'C:\Program Files (x86)\Microsoft Visual Studio\2019\Community\MSBuild\Current\Bin\MSBuild.exe' creacion_de_empleados.sln /p:Configuration=Release
+          & 'C:\Program Files\Microsoft Visual Studio\2022\Community\MSBuild\Current\Bin\MSBuild.exe' creacion_de_empleados.sln /p:Configuration=Release
 
       - name: Run tests
         run: |
