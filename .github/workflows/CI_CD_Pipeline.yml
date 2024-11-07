@@ -19,7 +19,7 @@ jobs:
 
       - name: Build project
         run: |
-          & 'C:\Program Files\Microsoft Visual Studio\2022\Community\MSBuild\Current\Bin\MSBuild.exe' creacion_de_empleados.sln /p:Configuration=Release
+          & 'C:/Program Files/Microsoft Visual Studio/2022/Community/MSBuild/Current/Bin/MSBuild.exe' creacion_de_empleados.sln /p:Configuration=Release
 
       - name: Run tests
         run: |
