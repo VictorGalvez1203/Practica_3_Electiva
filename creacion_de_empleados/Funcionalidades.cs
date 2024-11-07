@@ -1,8 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace creacion_de_empleados
 {
@@ -60,27 +58,33 @@ namespace creacion_de_empleados
 
             if (departamento == "Gerencial")
             {
+                // Verifica si ya existe un empleado gerencial
                 if (empleadoGencial == null)
                 {
+                    // Si no existe, crea el empleado Gerencial
                     empleadoGencial = Gerencial.ObtenerInstancia(codigo, nombre, cedula, departamento, precio_horas, horas_trabajadas);
                     lista.Add(empleadoGencial);
+                    tipo = false; // Retorna false porque se creó exitosamente
                 }
                 else
                 {
+                    // Si ya existe, no crea otro y devuelve true indicando que ya existe un empleado
                     tipo = true;
                 }
-                
             }
             else if (departamento == "Administrativo")
             {
+                // Crea el empleado administrativo
                 adm = new Administrativo(codigo, nombre, cedula, departamento, precio_horas, horas_trabajadas);
                 lista.Add(adm);
             }
             else
             {
+                // Crea el empleado operativo
                 ope = new Operativo(codigo, nombre, cedula, departamento, precio_horas, horas_trabajadas);
                 lista.Add(ope);
             }
+
             return tipo;
         }
 

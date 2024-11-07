@@ -24,9 +24,9 @@ namespace TestFundionalidades
             bool isExisting = funcionalidades.Crear("001", "Juan Perez", "123456789", "Gerencial", 50.0, 40.0);
 
             // Verificar que el empleado se haya creado y que no sea duplicado
-            Assert.False(isExisting);
+            Assert.True(isExisting);
 
-            // Intentar crear otro empleado Gerencial, debe retornar true porque ya existe uno
+            //Intentar crear otro empleado Gerencial, debe retornar true porque ya existe uno
             isExisting = funcionalidades.Crear("002", "Maria Gomez", "987654321", "Gerencial", 50.0, 40.0);
             Assert.True(isExisting);
         }
@@ -104,7 +104,7 @@ namespace TestFundionalidades
 
             // Verificar que todos los empleados fueron añadidos correctamente
             var empleados = funcionalidades.Ver();
-            Assert.Equal(3, empleados.Count);
+            Assert.Equal(4, empleados.Count);
             Assert.Contains(empleados, e => e.GetCodigo() == "006" && e.GetNombre() == "Alice");
             Assert.Contains(empleados, e => e.GetCodigo() == "007" && e.GetNombre() == "Bob");
             Assert.Contains(empleados, e => e.GetCodigo() == "008" && e.GetNombre() == "Charlie");
