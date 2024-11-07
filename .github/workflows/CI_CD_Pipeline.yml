@@ -1,25 +1,30 @@
-name: CI/CD_Pipeline
+name: CI/CD Pipeline
 
 on:
   push:
-    branches: [ main, master ]
+    branches: [ main ]
   pull_request:
-    branches: [ main, master ]
+    branches: [ main ]
 
 jobs:
-  build-and-test:
-    runs-on: windows-2022
+  build:
+    runs-on: windows-latest
 
     steps:
-      - name: Check out the repository code
+      - name: Checkout code
         uses: actions/checkout@v2
-        
+
+      - name: Setup Visual Studio
+        uses: microsoft/setup-msbuild@v1
+        with:
+          vs-version: '2022'
+
       - name: Restore dependencies
         run: nuget restore creacion_de_empleados.sln
 
       - name: Build project
         run: |
-          & 'C:/Program Files/Microsoft Visual Studio/2022/Community/MSBuild/Current/Bin/MSBuild.exe' creacion_de_empleados.sln /p:Configuration=Release
+          msbuild creacion_de_empleados.sln /p:Configuration=Release
 
       - name: Run tests
         run: |
@@ -31,5 +36,4 @@ jobs:
         uses: actions/upload-artifact@v3
         with:
           name: test-results
-          path: 'creacion_de_empleados/TestResults/test-results.trx'
-
+          path: 'TestFundionalidades/test-results.trx'
