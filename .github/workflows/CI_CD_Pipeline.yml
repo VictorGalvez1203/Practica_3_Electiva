@@ -1,0 +1,36 @@
+name: CI/CD_Pipeline
+
+on:
+  push:
+    branches: [ master ]
+  pull_request:
+    branches: [ master ]
+
+jobs:
+  build-and-test:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Check out the repository code
+        uses: actions/checkout@v2
+        
+      - name: Setup .NET Core
+        uses: actions/setup-dotnet@v2
+        with:
+          dotnet-version: '6.0'
+
+      - name: Restore dependencies
+        run: cd creacion_de_empleados && dotnet restore
+
+      - name: Build the project
+        run: cd creacion_de_empleados && dotnet build --configuration Release --no-restore
+
+      - name: Run tests
+        run: cd creacion_de_empleados && dotnet test --no-build --verbosity normal --logger "trx;LogFileName=test-results.trx"
+
+      - name: Publish test results
+        if: always()
+        uses: actions/upload-artifact@v3
+        with:
+          name: test-results
+          path: 'creacion_de_empleados/TestResults/test-results.trx'
