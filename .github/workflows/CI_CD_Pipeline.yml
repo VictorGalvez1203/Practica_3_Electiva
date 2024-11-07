@@ -9,7 +9,7 @@ on:
 jobs:
   build:
     runs-on: [windows-latest]
-
+    
     steps:
       - name: Checkout code
         uses: actions/checkout@v2
@@ -25,3 +25,15 @@ jobs:
 
       - name: Build project
         run: msbuild creacion_de_empleados.sln
+
+      - name: Run tests
+        run: |
+          cd TestFundionalidades
+          dotnet test TestFundionalidades.csproj --no-build --verbosity normal --logger "trx;LogFileName=test-results.trx"
+          
+      - name: Publish test results
+        if: always()
+        uses: actions/upload-artifact@v3
+        with:
+          name: test-results
+          path: 'TestFundionalidades/test-results.trx'
