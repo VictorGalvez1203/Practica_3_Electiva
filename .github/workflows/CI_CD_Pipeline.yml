@@ -18,6 +18,13 @@ jobs:
         uses: actions/setup-dotnet@v2
         with:
           dotnet-version: '6.0'
+          
+      - name: Set environment variable to x64
+        run: |
+          set DOTNET_CLI_TELEMETRY_OPTOUT=1
+          set DOTNET_ROOT=C:\Program Files\dotnet
+          set PATH=%PATH%;%DOTNET_ROOT%
+          set MSBuildArchitecture=x64
 
       - name: Restore dependencies
         run: cd creacion_de_empleados && dotnet restore
