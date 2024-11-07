@@ -18,7 +18,8 @@ jobs:
         run: nuget restore creacion_de_empleados.sln
 
       - name: Build the project
-        run: dotnet build creacion_de_empleados.sln --configuration Release
+        run: |
+          & 'C:\Program Files (x86)\Microsoft Visual Studio\2019\Community\MSBuild\Current\Bin\MSBuild.exe' creacion_de_empleados.sln /p:Configuration=Release
 
       - name: Run tests
         run: |
