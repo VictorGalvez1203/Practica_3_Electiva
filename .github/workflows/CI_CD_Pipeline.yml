@@ -8,30 +8,33 @@ on:
 
 jobs:
   build-and-test:
-    runs-on: windows-latest  # O usa ubuntu-latest si prefieres
+    runs-on: windows-latest
 
     steps:
       - name: Check out the repository code
         uses: actions/checkout@v2
 
-      - name: Setup .NET Core
-        uses: actions/setup-dotnet@v2
+      - name: Setup .NET SDK
+        uses: actions/setup-dotnet@v3
         with:
           dotnet-version: '6.0'
+          architecture: x64
 
       - name: Restore dependencies
         run: cd creacion_de_empleados && dotnet restore
 
       - name: Build the project
-        run: cd creacion_de_empleados && dotnet build --configuration Release --no-restore
+        run: dotnet build creacion_de_empleados.sln --configuration Release --no-restore -p:Platform=x64
+
+      - name: Create TestResults Directory (if it doesn't exist)
+        run: mkdir -p creacion_de_empleados/TestResults
 
       - name: Run tests
-        run: cd creacion_de_empleados && dotnet test --no-build --verbosity normal --logger "trx;LogFileName=test-results.trx"
+        run: cd creacion_de_empleados && dotnet test --no-build --verbosity normal --logger "trx;LogFileName=TestResults/test-results.trx"
 
       - name: Publish test results
         if: always()
         uses: actions/upload-artifact@v3
         with:
           name: test-results
-          path: 'creacion_de_empleados/TestResults/test-results.trx'
-
+          path: 'creacion_de_empleados/TestResults/*.trx'
