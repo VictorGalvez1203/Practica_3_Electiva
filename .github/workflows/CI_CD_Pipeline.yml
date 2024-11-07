@@ -1,0 +1,39 @@
+name: CI/CD Pipeline
+
+on:
+  push:
+    branches: [ master ]
+  pull_request:
+    branches: [ master ]
+
+jobs:
+  build:
+    runs-on: [windows-latest]
+    
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
+        
+      - name: setup-msbuild
+        uses: microsoft/setup-msbuild@v2
+
+      - name: Setup NuGet.exe
+        uses: NuGet/setup-nuget@v2.0.0
+         
+      - name: Restore dependencies
+        run: nuget restore creacion_de_empleados.sln
+
+      - name: Build project
+        run: msbuild creacion_de_empleados.sln
+
+      - name: Run tests
+        run: |
+          cd TestFundionalidades
+          dotnet test TestFundionalidades.csproj --no-build --verbosity normal --logger "trx;LogFileName=test-results.trx"
+          
+      - name: Publish test results
+        if: always()
+        uses: actions/upload-artifact@v3
+        with:
+          name: test-results
+          path: 'TestFundionalidades/test-results.trx'
