@@ -8,26 +8,22 @@ on:
 
 jobs:
   build-and-test:
-    runs-on: ubuntu-latest
+    runs-on: windows-latest 
 
     steps:
       - name: Check out the repository code
         uses: actions/checkout@v2
         
-      - name: Setup .NET Core
-        uses: actions/setup-dotnet@v2
-        with:
-          dotnet-version: '6.0'
-
       - name: Restore dependencies
-        run: cd creacion_de_empleados && dotnet restore
+        run: nuget restore creacion_de_empleados/creacion_de_empleados.sln
 
       - name: Build the project
-        run: cd creacion_de_empleados && dotnet build --configuration Release --no-restore
+        run: msbuild creacion_de_empleados/creacion_de_empleados.sln /p:Configuration=Release
 
       - name: Run tests
-        run: cd creacion_de_empleados && dotnet test --no-build --verbosity normal --logger "trx;LogFileName=test-results.trx"
-
+        run: |
+          dotnet test creacion_de_empleados/creacion_de_empleados.Tests/creacion_de_empleados.Tests.csproj --configuration Release --logger "trx;LogFileName=test-results.trx"
+        
       - name: Publish test results
         if: always()
         uses: actions/upload-artifact@v3
